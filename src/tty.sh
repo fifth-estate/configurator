@@ -92,8 +92,14 @@ cfg_tty_debug()
 }
 
 
+__cfg_tty_input()
+{
+	printf "[\033[0;34m INPUT\033[0m] %s: " "$1"
+}
+
+
 cfg_tty_yn() {
-	printf "[\033[0;34m INPUT\033[0m] %s (y/N): " "$1"
+	__cfg_tty_input "$1 (y/N)"
 	read -r _inp
 	cfg_log_yn "$1" "$_inp"
 
@@ -112,5 +118,22 @@ cfg_tty_yn() {
 	fi
 	
 	return 0
+}
+
+
+cfg_tty_pwd() 
+{
+	__cfg_tty_input "$1"
+	stty -echo ; read -r rv ; printf "\n" ; stty echo
+	cfg_log_pwd "$1"
+	
+	__cfg_tty_input "Repeat password to confirm"
+	stty -echo ; read -r _chk ; printf "\n" ; stty echo
+	cfg_log_pwd "Repeat password to confirm"
+
+	if [ "$rv" != "$_chk" ] ; then
+		cfg_tty_error "Passwords don't match! Please try again"
+		cfg_tty_pwd "$1"
+	fi
 }
 
