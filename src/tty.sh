@@ -6,10 +6,7 @@
 cfg_tty_emerg()
 {
 	printf "[\033[0;31mEMERG\033[0m] %s...\n" "$1"
-
-	if [ -n "$CFG_LOG" ] ; then
-		printf "%s [EMERG] %s...\n" "$(date)" "$1" >> "$CFG_LOG"
-	fi
+	cfg_log_emerg "$1"
 
 	exit
 }
@@ -22,10 +19,7 @@ cfg_tty_emerg()
 cfg_tty_alert() 
 {
 	printf "[\033[0;31mALERT\033[0m] %s...\n" "$1"
-	
-	if [ -n "$CFG_LOG" ] ; then
-		printf "%s [ALERT] %s...\n" "$(date)" "$1" >> "$CFG_LOG"
-	fi
+	cfg_log_alert "$1"
 
 	exit
 }
@@ -37,11 +31,9 @@ cfg_tty_alert()
 ##
 cfg_tty_crit() 
 {
-	printf "[\033[0;31mCRIT\033[0m]  %s.\n" "$1"
+	printf "[\033[0;31mCRIT\033[0m]  %s...\n" "$1"
+	cfg_log_crit "$1"
 	
-	if [ -n "$CFG_LOG" ] ; then
-		printf "%s [CRIT]  %s...\n" "$(date)" "$1" >> "$CFG_LOG"
-	fi
 }
 
 
@@ -51,11 +43,8 @@ cfg_tty_crit()
 ##
 cfg_tty_err() 
 {
-	printf "[\033[0;31mERR\033[0m]   %s.\n" "$1"
-	
-	if [ -n "$CFG_LOG" ] ; then
-		printf "%s [ERR]   %s...\n" "$(date)" "$1" >> "$CFG_LOG"
-	fi
+	printf "[\033[0;31mERR\033[0m]   %s...\n" "$1"
+	cfg_log_err "$1"	
 }
 
 
@@ -65,11 +54,8 @@ cfg_tty_err()
 ##
 cfg_tty_warning() 
 {
-	printf "[\033[0;33mWARN\033[0m]  %s.\n" "$1"
-	
-	if [ -n "$CFG_LOG" ] ; then
-		printf "%s [WARN]  %s...\n" "$(date)" "$1" >> "$CFG_LOG"
-	fi
+	printf "[\033[0;33mWARN\033[0m]  %s...\n" "$1"
+	cfg_log_warning "$1"	
 }
 
 
@@ -79,11 +65,8 @@ cfg_tty_warning()
 ##
 cfg_tty_notice() 
 {
-	printf "[\033[0;33mNOTE\033[0m]  %s.\n" "$1"
-	
-	if [ -n "$CFG_LOG" ] ; then
-		printf "%s [NOTE]  %s...\n" "$(date)" "$1" >> "$CFG_LOG"
-	fi
+	printf "[\033[0;33mNOTE\033[0m]  %s...\n" "$1"
+	cfg_log_notice "$1"	
 }
 
 
@@ -94,10 +77,7 @@ cfg_tty_notice()
 cfg_tty_info()
 {
 	printf "[\033[0;32mINFO\033[0m]  %s.\n" "$1"
-	
-	if [ -n "$CFG_LOG" ] ; then
-		printf "%s [INFO]  %s...\n" "$(date)" "$1" >> "$CFG_LOG"
-	fi
+	cfg_log_info "$1"	
 }
 
 
@@ -108,24 +88,26 @@ cfg_tty_info()
 cfg_tty_debug()
 {
 	printf "[\033[0;32mDEBUG\033[0m] %s.\n" "$1"
-	
-	if [ -n "$CFG_LOG" ] ; then
-		printf "%s [DEBUG] %s...\n" "$(date)" "$1" >> "$CFG_LOG"
-	fi
+	cfg_log_debug "$1"	
 }
 
 
 cfg_tty_yn() {
-	printf "[\033[0;34m INP\033[0m] %s (y/N): " "$1"
+	printf "[\033[0;34m INPUT\033[0m] %s (y/N): " "$1"
 	read -r _inp
+	cfg_log_yn "$1" "$_inp"
 
 	if [ -z "$_inp" ] ; then
 		cfg_tty_info "Operation skipped"
+		cfg_log_info "Operation skipped"
+
 		return 1
 	fi 
 
 	if [ "$_inp" != "y" ] && [ "$_inp" != "Y" ] ; then
 		cfg_tty_info "Operation skipped"
+		cfg_log_info "Operation skipped"
+
 		return 1
 	fi
 	
