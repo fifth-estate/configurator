@@ -153,15 +153,20 @@ cfg_tty_splash()
 __cfg_tty_progress_run()
 {
 	while true ; do
-		_log=$(tail -n 1 "$1")
-		printf "%s: %s\r" "$1" "$_log"
+		_cols=$(tput cols)
+		printf "\r%${_cols}s" ""
+
+		_log=$(tail -n 1 "$2")
+		printf "\r%s: %s\r" "$1" "$_log"
+		
+		sleep 1
 	done
 }
 
 
 cfg_tty_progress_start()
 {
-	__cfg_tty_progress_run "$1" &
+	__cfg_tty_progress_run "$1" "$2" &
 	CFG_PROGRESS_PID=$!
 }
 
