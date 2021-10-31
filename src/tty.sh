@@ -188,7 +188,7 @@ __cfg_tty_progress_bar()
 cfg_tty_progress_start()
 {
 	CFG_PROGRESS_MSG="$1"
-	CFG_PROGRESS_GRAPH="graph"
+	CFG_PROGRESS_GRAPH=".graph.cfg.log"
 
 	echo 0 > "$CFG_PROGRESS_GRAPH"
 	__cfg_tty_progress_run "$2" &
@@ -208,5 +208,7 @@ cfg_tty_progress_stop()
 
 	cfg_tty_cr
 	cfg_tty_info "$CFG_PROGRESS_MSG: done"
+
+	rm -f "$CFG_PROGRESS_GRAPH" >/dev/null 2>&1
 }
 
