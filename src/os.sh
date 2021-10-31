@@ -107,3 +107,38 @@ cfg_os_notify()
 	fi
 }
 
+
+cfg_os_update()
+{
+	cfg_tty_notice "Updating packages, this may take a while"
+	[ "$(id -u)" -ne 0 ] && _su="sudo"
+	
+	cfg_os_distro
+	
+	_log="pkg.cfg.log"
+	cfg_tty_progress_start "Updating package lists" "$_log"
+
+	if [ "$rv" == "Arch" ] ; then
+		"$_su" pacman -Sy >"$_log" 2>&1
+		rv=$?
+	
+	elif [ "$rv" == "FreeBSD" ] ; then
+		"$_su" pkg update >"$_log" 2>&1
+		rv=$?
+
+	else
+		"$_su" apt update >"$_log" 2>&1
+		rv=$?
+	fi
+	
+	cfg_tty_progress_stop
+
+	if [ -n "$CFG_LOG" ] ; then
+		echo "$_log" >> "$CFG_LOG"
+	fi
+
+	if [ ! $rv -eq 0 ] ; then
+		cfg_tty_critical "Package lists failed to update"
+	fi
+}
+
