@@ -147,3 +147,28 @@ cfg_tty_splash()
 	printf "%s\n\n" "$_license"
 }
 
+
+# https://bash.cyberciti.biz/guide/Putting_functions_in_background
+
+__cfg_tty_progress_run()
+{
+	while true ; do
+		_log=$(tail -n 1 "$1")
+		printf "%s: %s\r" "$1" "$_log"
+	done
+}
+
+
+cfg_tty_progress_start()
+{
+	__cfg_tty_progress_run "$1" &
+	CFG_PROGRESS_PID=$!
+}
+
+
+cfg_tty_progress_stop()
+{
+	kill $CFG_PROGRESS_PID >/dev/null 2>&1
+	echo
+}
+
