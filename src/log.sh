@@ -95,12 +95,25 @@ cfg_log_debug()
 }
 
 
+__cfg_log_input()
+{
+	printf "%s [INPUT] %s" "$(date)" "$1" >> "$CFG_LOG"
+}
+
+
 cfg_log_yn()
 {
 	if [ -n "$CFG_LOG" ] ; then
-		printf "%s [INPUT] %s (y/N): %s\n" 				\
-			"$(date)" "$1" "$2"					\
-			>> "$CFG_LOG"
+		__cfg_log_input "$1 (y/N): "
+		printf "%s" "$2" >> "$CFG_LOG"
+	fi
+}
+
+
+cfg_log_pwd()
+{
+	if [ -n "$CFG_LOG" ] ; then
+		__cfg_log_input "$1: ********"
 	fi
 }
 
