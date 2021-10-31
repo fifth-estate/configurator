@@ -55,8 +55,8 @@ cfg_os_version()
 	elif [ "$_distro" = "FreeBSD" ] ; then
 		rv=$(uname -r)
 		
-		_ver=$(echo "$rv"	\
-		    | cut -d '-' -f 1	\
+		_ver=$(echo "$rv"						\
+		    | cut -d '-' -f 1						\
 		    | tr -d '.')
 
 		if [ "$_ver" -lt 122 ] ; then
@@ -66,8 +66,8 @@ cfg_os_version()
 		fi
 
 	elif [ "$_distro" = "Debian" ] ; then
-		rv=$(grep 'VERSION=' /etc/os-release	\
-		    | tr -d '"' 			\
+		rv=$(grep 'VERSION=' /etc/os-release				\
+		    | tr -d '"' 						\
 		    | cut -d '=' -f 2)
 		
 		_ver=$(echo "$rv" | tr -d 'A-Z a-z ( ) .')
@@ -79,8 +79,8 @@ cfg_os_version()
 		fi
 
 	else
-		rv=$(grep "VERSION_ID" /etc/os-release	\
-		    | tr -d '"'				\
+		rv=$(grep "VERSION_ID" /etc/os-release				\
+		    | tr -d '"'							\
 		    | cut -d '=' -f 2)
 		
 		_ver=$(echo "$rv" | tr -d 'A-Z a-z ( ) .')
