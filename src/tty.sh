@@ -8,7 +8,7 @@ cfg_tty_emerg()
 	printf "[\033[0;31mEMERG\033[0m] %s...\n" "$1"
 	cfg_log_emerg "$1"
 
-	exit
+	exit 1
 }
 
 
@@ -21,7 +21,7 @@ cfg_tty_alert()
 	printf "[\033[0;31mALERT\033[0m] %s...\n" "$1"
 	cfg_log_alert "$1"
 
-	exit
+	exit 1
 }
 
 
