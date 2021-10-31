@@ -157,7 +157,8 @@ __cfg_tty_progress_run()
 		printf "\r%${_cols}s" ""
 
 		_log=$(tail -n 1 "$1")
-		printf "\r%s: %s\r" "$CFG_PROGRESS_MSG" "$_log"
+		_done=$(tail -n 1 "$CFG_PROGRESS_GRAPH")
+		printf "\r %s%% %s: %s\r" "$_done" "$CFG_PROGRESS_MSG" "$_log"
 		
 		sleep 1
 	done
@@ -167,9 +168,17 @@ __cfg_tty_progress_run()
 cfg_tty_progress_start()
 {
 	CFG_PROGRESS_MSG="$1"
+	CFG_PROGRESS_GRAPH="graph"
 
+	echo 0 > "$CFG_PROGRESS_GRAPH"
 	__cfg_tty_progress_run "$2" &
 	CFG_PROGRESS_PID=$!
+}
+
+
+cfg_tty_progress_update()
+{
+	echo "$1" >> "$CFG_PROGRESS_GRAPH"
 }
 
 
@@ -179,7 +188,7 @@ cfg_tty_progress_stop()
 	_cols=$(tput cols)
 	printf "\r%${_cols}s" ""
 
-	printf "\r%s: done\n" "$CFG_PROGRESS_MSG"
+	printf "\r 100%% %s: done\n" "$CFG_PROGRESS_MSG"
 
 }
 
