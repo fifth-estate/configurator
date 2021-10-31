@@ -134,3 +134,16 @@ cfg_tty_pwd()
 	fi
 }
 
+
+cfg_tty_splash()
+{
+	_license=$(cat "$1")
+
+	if [ -n "$2" ] ; then
+		_logo=$(cat "$2")
+		printf "%s\n\n" "$_logo"
+	fi
+
+	printf "%s\n\n" "$_license"
+}
+
