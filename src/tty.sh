@@ -114,3 +114,21 @@ cfg_tty_debug()
 	fi
 }
 
+
+cfg_tty_yn() {
+	printf "[\033[0;34m INP\033[0m] %s (y/N): " "$1"
+	read -r _inp
+
+	if [ -z "$_inp" ] ; then
+		cfg_tty_info "Operation skipped"
+		return 1
+	fi 
+
+	if [ "$_inp" != "y" ] && [ "$_inp" != "Y" ] ; then
+		cfg_tty_info "Operation skipped"
+		return 1
+	fi
+	
+	return 0
+}
+
