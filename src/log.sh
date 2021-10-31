@@ -117,3 +117,15 @@ cfg_log_pwd()
 	fi
 }
 
+
+cfg_log_set()
+{
+	CFG_LOG="$1"
+}
+
+
+cfg_log_unset()
+{
+	unset CFG_LOG
+}
+
