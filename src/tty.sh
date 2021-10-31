@@ -148,21 +148,24 @@ cfg_tty_splash()
 }
 
 
+cfg_tty_cr()
+{
+	_cols=$(tput cols)
+	printf "\r%${_cols}s" ""
+}
+
+
 # https://bash.cyberciti.biz/guide/Putting_functions_in_background
 
 __cfg_tty_progress_run()
 {
 	while true ; do
-		_cols=$(tput cols)
-		printf "\r%${_cols}s" ""
-
 		_log=$(tail -n 1 "$1")
 		_curr=$(tail -n 1 "$CFG_PROGRESS_GRAPH")
 		_done=$(((_curr * 40) / 100))
 		_left=$((40 - _done - 1 ))
 
-		#printf "\r %s%% %s: %s\r" "$_done" "$CFG_PROGRESS_MSG" "$_log"
-
+		cfg_tty_cr
 		printf "\r %s%%\t[" "$_curr"
 		__cfg_tty_progress_bar $_done "."
 		__cfg_tty_progress_bar $_left " "
@@ -202,10 +205,8 @@ cfg_tty_progress_update()
 cfg_tty_progress_stop()
 {
 	kill $CFG_PROGRESS_PID >/dev/null 2>&1
-	
-	_cols=$(tput cols)
-	printf "\r%${_cols}s" ""
 
+	cfg_tty_cr
 	cfg_tty_info "$CFG_PROGRESS_MSG: done"
 }
 
