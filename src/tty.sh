@@ -1,3 +1,4 @@
+export rv
 
 ##
 # cfg_tty_emerg(): displays an emergency message

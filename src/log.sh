@@ -1,3 +1,4 @@
+export rv
 
 ##
 # cfg_log_emerg(): displays an emergency message
