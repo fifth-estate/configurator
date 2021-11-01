@@ -124,17 +124,13 @@ cfg_os_update()
 
 	if [ "$rv" = "Arch" ] ; then
 		"$_su" pacman -Syy >"$_log" 2>&1
-		rv=$?
-	
 	elif [ "$rv" = "FreeBSD" ] ; then
 		"$_su" pkg update >"$_log" 2>&1
-		rv=$?
-
 	else
 		"$_su" apt-get update >"$_log" 2>&1
-		rv=$?
 	fi
 	
+	rv=$?
 	cfg_tty_progress_stop
 
 	if [ -n "$CFG_LOG" ] ; then
@@ -156,7 +152,6 @@ cfg_os_upgrade()
 		sudo ls >/dev/null
 	fi
 	
-	cfg_os_update
 	cfg_os_distro
 	
 	_log=".pkg.cfg.log"
@@ -166,17 +161,13 @@ cfg_os_upgrade()
 
 	if [ "$rv" = "Arch" ] ; then
 		"$_su" pacman -Su --noconfirm >"$_log" 2>&1
-		rv=$?
-	
 	elif [ "$rv" = "FreeBSD" ] ; then
 		"$_su" pkg upgrade -y >"$_log" 2>&1
-		rv=$?
-
 	else
 		"$_su" apt-get upgrade -y >"$_log" 2>&1
-		rv=$?
 	fi
 	
+	rv=$?
 	cfg_tty_progress_stop
 
 	if [ -n "$CFG_LOG" ] ; then
@@ -185,6 +176,42 @@ cfg_os_upgrade()
 
 	if [ ! $rv -eq 0 ] ; then
 		cfg_tty_crit "Failed to upgrade system"
+	fi
+
+	rm -f "$_log" >/dev/null 2>&1
+}
+
+
+cfg_os_install() {
+	if [ "$(id -u)" -ne 0 ] ; then
+		_su="sudo"
+		sudo ls >/dev/null
+	fi
+
+	cfg_os_distro
+
+	_log=".pkg.cfg.log"
+	cfg_tty_notice "Installing packages, this may take a while"
+	cfg_tty_progress_start "Installing $1" "$_log"
+	cfg_tty_progress_update  25
+
+	if [ "$rv" == "Arch" ] ; then
+		"$_su" pacman -S --noconfirm --needed "$1" >"$_log" 2>&1
+	elif [ "$rv" == "FreeBSD" ] ; then
+		"$_su" pkg install -y --no-repo-update "$1" >"$_log" 2>&1
+	else
+		"$_su" apt install -y --no-upgrade "$1" >"$_log" 2>&1
+	fi
+
+	rv=$?
+	cfg_tty_progress_stop
+
+	if [ -n "$CFG_LOG" ] ; then
+		echo "$_log" >> "$CFG_LOG"
+	fi
+
+	if [ ! $rv -eq 0 ] ; then
+		cfg_tty_crit "Failed to install $1"
 	fi
 
 	rm -f "$_log" >/dev/null 2>&1
