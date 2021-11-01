@@ -110,12 +110,15 @@ cfg_os_notify()
 
 cfg_os_update()
 {
-	cfg_tty_notice "Updating packages, this may take a while"
-	[ "$(id -u)" -ne 0 ] && _su="sudo"
+	if [ "$(id -u)" -ne 0 ] ; then
+		_su="sudo"
+		sudo ls >/dev/null
+	fi
 	
 	cfg_os_distro
 	
 	_log=".pkg.cfg.log"
+	cfg_tty_notice "Updating packages, this may take a while"
 	cfg_tty_progress_start "Updating" "$_log"
 
 	if [ "$rv" = "Arch" ] ; then
