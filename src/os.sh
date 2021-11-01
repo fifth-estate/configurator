@@ -119,6 +119,7 @@ cfg_os_update()
 	cfg_tty_progress_start "Updating" "$_log"
 
 	if [ "$rv" == "Arch" ] ; then
+		cfg_tty_progress_update  25
 		"$_su" pacman -Syy >"$_log" 2>&1
 		rv=$?
 	

@@ -174,7 +174,7 @@ __cfg_tty_progress_run()
 		__cfg_tty_progress_bar $_left " "
 
 		_msg=$(tail -n 1 "$1" | tr -d '\n')
-		_msglen=$((_cols / 4))
+		_msglen=$((_cols / 3))
 		printf "]\t%s: %.*s " "$CFG_PROGRESS_MSG" $_msglen "$_msg"
 		
 		sleep 1
