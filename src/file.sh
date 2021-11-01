@@ -22,6 +22,7 @@ cfg_file_rm()
 {
 	if [ -f "$1" ] || [ -d "$1" ] ; then
 		rm -rf "$1" >/dev/null 2>&1
+		rv=$?
 
 		if [ "$rv" -eq 0 ] ; then
 			cfg_tty_info "$1 removed"
@@ -30,6 +31,28 @@ cfg_file_rm()
 		fi
 	else
 		cfg_tty_notice "$1 not found, skipping removal"
+	fi
+}
+
+
+cfg_file_put() 
+{
+	printf "%b" "$2" >> "$1"
+	rv=$?
+
+	if [ "$rv" -ne 0 ] ; then
+		cfg_tty_alert "Failed to write to $1"
+	fi
+}
+
+
+cfg_file_putn() 
+{
+	printf "%b\n" "$2" >> "$1"
+	rv=$?
+
+	if [ "$rv" -ne 0 ] ; then
+		cfg_tty_alert "Failed to write to $1"
 	fi
 }
 
