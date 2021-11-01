@@ -116,10 +116,10 @@ cfg_os_update()
 	cfg_os_distro
 	
 	_log="pkg.cfg.log"
-	cfg_tty_progress_start "Updating package lists" "$_log"
+	cfg_tty_progress_start "Updating" "$_log"
 
 	if [ "$rv" == "Arch" ] ; then
-		"$_su" pacman -Sy >"$_log" 2>&1
+		"$_su" pacman -Syy >"$_log" 2>&1
 		rv=$?
 	
 	elif [ "$rv" == "FreeBSD" ] ; then

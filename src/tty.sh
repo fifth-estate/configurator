@@ -160,16 +160,18 @@ cfg_tty_cr()
 __cfg_tty_progress_run()
 {
 	while true ; do
-		_log=$(tail -n 1 "$1")
+		_len=$(tput cols)
+		_len=$((_len / 4))
+		_log=$(tail -n 1 "$1" | tr -d '\n')
 		_curr=$(tail -n 1 "$CFG_PROGRESS_GRAPH")
-		_done=$(((_curr * 40) / 100))
-		_left=$((40 - _done - 1 ))
+		_done=$(((_curr * _len) / 100))
+		_left=$((_len - _done - 1 ))
 
 		cfg_tty_cr
 		printf "\r %s%%\t[" "$_curr"
 		__cfg_tty_progress_bar $_done "."
-		__cfg_tty_progress_bar $_left " "
-		printf "]\t %s: %s" "$CFG_PROGRESS_MSG" "$_log"
+		__cfg_tty_progress_bar $_left "."
+		printf "] %s: %s" "$CFG_PROGRESS_MSG" "$_log"
 		
 		sleep 1
 	done
@@ -178,7 +180,7 @@ __cfg_tty_progress_run()
 __cfg_tty_progress_bar()
 {
 	_i=0
-	while [ $_i -le $1 ] ; do
+	while [ $_i -le "$1" ] ; do
 		printf "%s" "$2"
 		_i=$((_i + 1))
 	done
