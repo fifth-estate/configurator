@@ -156,6 +156,7 @@ cfg_os_upgrade()
 		sudo ls >/dev/null
 	fi
 	
+	cfg_os_update
 	cfg_os_distro
 	
 	_log=".pkg.cfg.log"
@@ -163,15 +164,15 @@ cfg_os_upgrade()
 	cfg_tty_progress_start "Upgrading" "$_log"
 
 	if [ "$rv" = "Arch" ] ; then
-		"$_su" pacman -Syyu --noconfirm >"$_log" 2>&1
+		"$_su" pacman -Su --noconfirm >"$_log" 2>&1
 		rv=$?
 	
 	elif [ "$rv" = "FreeBSD" ] ; then
-		"$_su" pkg upgrade && pkg upgrade -y >"$_log" 2>&1
+		"$_su" pkg upgrade -y >"$_log" 2>&1
 		rv=$?
 
 	else
-		"$_su" apt-get update && apt-get upgrade -y >"$_log" 2>&1
+		"$_su" apt-get upgrade -y >"$_log" 2>&1
 		rv=$?
 	fi
 	
