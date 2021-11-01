@@ -118,12 +118,12 @@ cfg_os_update()
 	_log=".pkg.cfg.log"
 	cfg_tty_progress_start "Updating" "$_log"
 
-	if [ "$rv" == "Arch" ] ; then
+	if [ "$rv" = "Arch" ] ; then
 		cfg_tty_progress_update  25
 		"$_su" pacman -Syy >"$_log" 2>&1
 		rv=$?
 	
-	elif [ "$rv" == "FreeBSD" ] ; then
+	elif [ "$rv" = "FreeBSD" ] ; then
 		"$_su" pkg update >"$_log" 2>&1
 		rv=$?
 
@@ -156,11 +156,11 @@ cfg_os_upgrade()
 	_log=".pkg.cfg.log"
 	cfg_tty_progress_start "Upgrading" "$_log"
 
-	if [ "$rv" == "Arch" ] ; then
+	if [ "$rv" = "Arch" ] ; then
 		"$_su" pacman -Syyu --noconfirm >"$_log" 2>&1
 		rv=$?
 	
-	elif [ "$rv" == "FreeBSD" ] ; then
+	elif [ "$rv" = "FreeBSD" ] ; then
 		"$_su" pkg upgrade && pkg upgrade -y >"$_log" 2>&1
 		rv=$?
 
