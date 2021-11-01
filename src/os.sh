@@ -120,9 +120,9 @@ cfg_os_update()
 	_log=".pkg.cfg.log"
 	cfg_tty_notice "Updating packages, this may take a while"
 	cfg_tty_progress_start "Updating" "$_log"
+	cfg_tty_progress_update  25
 
 	if [ "$rv" = "Arch" ] ; then
-		cfg_tty_progress_update  25
 		"$_su" pacman -Syy >"$_log" 2>&1
 		rv=$?
 	
@@ -162,6 +162,7 @@ cfg_os_upgrade()
 	_log=".pkg.cfg.log"
 	cfg_tty_notice "Updating packages, this may take a while"
 	cfg_tty_progress_start "Upgrading" "$_log"
+	cfg_tty_progress_update  25
 
 	if [ "$rv" = "Arch" ] ; then
 		"$_su" pacman -Su --noconfirm >"$_log" 2>&1
