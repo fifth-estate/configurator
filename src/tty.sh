@@ -164,7 +164,7 @@ __cfg_tty_progress_run()
 		_barlen=$((_cols / 6))
 
 		cfg_tty_cr
-		printf "\r %s%%\t[" "$_curr"
+		printf "\r[%s%%]\t[" "$_curr"
 
 		_curr=$(tail -n 1 "$CFG_PROGRESS_GRAPH")
 		_done=$(((_curr * _barlen) / 100))
@@ -214,7 +214,7 @@ cfg_tty_progress_stop()
 
 	cfg_tty_cr
 	cfg_tty_info "$CFG_PROGRESS_MSG: done"
-
+		
 	rm -f "$CFG_PROGRESS_GRAPH" >/dev/null 2>&1
 }
 
