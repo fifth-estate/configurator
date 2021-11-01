@@ -127,7 +127,7 @@ cfg_os_update()
 		rv=$?
 
 	else
-		"$_su" apt update >"$_log" 2>&1
+		"$_su" apt-get update >"$_log" 2>&1
 		rv=$?
 	fi
 	
@@ -138,9 +138,45 @@ cfg_os_update()
 	fi
 
 	if [ ! $rv -eq 0 ] ; then
-		cfg_tty_critical "Package lists failed to update"
+		cfg_tty_crit "Package lists failed to update"
 	fi
 
 	rm -f "$_log" >/dev/null 2>&1
 }
 
+
+cfg_os_upgrade()
+{
+	cfg_tty_notice "Updating packages, this may take a while"
+	[ "$(id -u)" -ne 0 ] && _su="sudo"
+	
+	cfg_os_distro
+	
+	_log=".pkg.cfg.log"
+	cfg_tty_progress_start "Upgrading" "$_log"
+
+	if [ "$rv" == "Arch" ] ; then
+		"$_su" pacman -Syyu --noconfirm >"$_log" 2>&1
+		rv=$?
+	
+	elif [ "$rv" == "FreeBSD" ] ; then
+		"$_su" pkg upgrade && pkg upgrade -y >"$_log" 2>&1
+		rv=$?
+
+	else
+		"$_su" apt-get update && apt-get upgrade -y >"$_log" 2>&1
+		rv=$?
+	fi
+	
+	cfg_tty_progress_stop
+
+	if [ -n "$CFG_LOG" ] ; then
+		echo "$_log" >> "$CFG_LOG"
+	fi
+
+	if [ ! $rv -eq 0 ] ; then
+		cfg_tty_crit "Failed to upgrade system"
+	fi
+
+	rm -f "$_log" >/dev/null 2>&1
+}
