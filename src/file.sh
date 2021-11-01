@@ -87,6 +87,34 @@ cfg_file_sym()
 		cfg_tty_info "Symlink $2 --> $1 created"
 	else
 		cfg_tty_alert "Failed to create symlink $2 --> $1"
+		exit
+	fi
+}
+
+
+cfg_file_bkp() 
+{
+	if [ -f "$1" ] ; then
+		cp "$1" "$2" >/dev/null 2>&1
+		core_check $? "File $1 backed up to $2"
+		if [ "$rv" -eq 0 ] ; then
+			cfg_tty_info "Backup $1 --> $2 created"
+		else
+			cfg_tty_alert "Failed to create backup $1 --> $2"
+			exit
+		fi
+	else
+		cfg_tty_warning "File $1 not found, skipping backup"
+	fi
+}
+
+
+cfg_file_bkp_safe() 
+{
+	if [ -f "$2" ] ; then
+		cfg_tty_notice "Backup file $2 exists, skipping"
+	else
+		cfg_file_bkp "$1" "$2"
 	fi
 }
 
