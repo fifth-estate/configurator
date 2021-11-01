@@ -115,7 +115,7 @@ cfg_os_update()
 	
 	cfg_os_distro
 	
-	_log="pkg.cfg.log"
+	_log=".pkg.cfg.log"
 	cfg_tty_progress_start "Updating" "$_log"
 
 	if [ "$rv" == "Arch" ] ; then
@@ -140,5 +140,7 @@ cfg_os_update()
 	if [ ! $rv -eq 0 ] ; then
 		cfg_tty_critical "Package lists failed to update"
 	fi
+
+	rm -f "$_log" >/dev/null 2>&1
 }
 
