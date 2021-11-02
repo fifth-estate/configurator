@@ -173,9 +173,9 @@ __cfg_tty_progress_run()
 		_left=$((_barlen - _done - 1 ))
 		__cfg_tty_progress_bar $_left " "
 
-		_msg=$(tail -n 1 "$1" | tr -d '\n')
-		_msglen=$((_cols / 3))
-		printf "]\t%s: %.*s " "$CFG_PROGRESS_MSG" $_msglen "$_msg"
+		_msg=$(tail -n 1 "$1" | tr -d '\n' | tr -d '\r')
+		_msglen=$((_cols / 2))
+		printf "]\t%s: %.*s... " "$CFG_PROGRESS_MSG" $_msglen "$_msg"
 		
 		sleep 1
 	done
@@ -215,6 +215,6 @@ cfg_tty_progress_stop()
 	cfg_tty_cr
 	cfg_tty_info "$CFG_PROGRESS_MSG: done"
 		
-	rm -f "$CFG_PROGRESS_GRAPH" >/dev/null 2>&1
+	cfg_file_rm "$CFG_PROGRESS_GRAPH"
 }
 
