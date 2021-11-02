@@ -118,3 +118,21 @@ cfg_file_bkp_safe()
 	fi
 }
 
+
+cfg_file_scp()
+{
+	if [ -z "$CFG_LOG" ] ; then
+		scp -r "$1" "$2" >"$CFG_LOG" 2>&1
+	else
+		scp -r "$1" "$2" >/dev/null 2>&1
+	fi
+
+	rv=$?
+	if [ $rv -eq 0 ] ; then
+		cfg_tty_info "Copied $1 --> $2 over SSH"
+	else
+		cfg_tty_alert "Failed to copy $1 --> $2 over SSH"
+		exit 1
+	fi
+}
+
